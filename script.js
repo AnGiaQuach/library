@@ -58,6 +58,61 @@ function createBookCard(title, author, pages, imgUrl) {
   });
 }
 
+class createBookCardByClass {
+  constructor(title, author, pages, imgUrl) {
+    this.title = title;
+    this.author = author;
+    this.pages = pages;
+    this.imgUrl = imgUrl;
+    this.id = ++currentID;
+  }
+
+  displayCard() {
+    const card = document.createElement("div");
+    const description = document.createElement("div");
+    const readBtn = document.createElement("button");
+    const deleteBtn = document.createElement("button");
+    const image = document.createElement("img");
+    const authorText = document.createElement("div");
+    const titleText = document.createElement("div");
+
+    authorText.textContent = `by ${this.author}`;
+    titleText.textContent = this.title;
+    image.src = this.imgUrl;
+    readBtn.textContent = "Unread";
+    deleteBtn.textContent = "Delete";
+
+    card.appendChild(image);
+    card.setAttribute("id", `${currentID}`);
+    card.classList.add("card");
+    description.classList.add("description");
+    readBtn.classList.add("read-state");
+    deleteBtn.classList.add("delete-btn");
+    description.appendChild(titleText);
+    description.appendChild(authorText);
+    description.appendChild(readBtn);
+    description.appendChild(deleteBtn);
+    card.appendChild(description);
+    bookMenu.appendChild(card);
+
+    readBtn.addEventListener("click", () => {
+      readBtn.textContent === "Unread"
+        ? (readBtn.textContent = "read")
+        : (readBtn.textContent = "Unread");
+    });
+
+    deleteBtn.addEventListener("click", () => {
+      bookMenu.removeChild(card);
+      for (let i = 0; i < library.length; i++) {
+        if (library[i].id === this.id) {
+          library.splice(i, 1);
+          break;
+        }
+      }
+    });
+  }
+}
+
 addBookBtn.addEventListener("click", () => {
   dialogBookForm.showModal();
 });
@@ -79,12 +134,13 @@ addConfirmBtn.addEventListener("click", () => {
     return;
   }
 
-  const book = new createBookCard(
+  const book = new createBookCardByClass(
     title.value,
     author.value,
     numberPage.value,
     imgUrl.value
   );
+  book.displayCard();
 
   library.push(book);
   console.log(book);
